@@ -139,6 +139,46 @@ $total-columns: 12 !default;
 
 }
 
+
+// Create placeholder selectors for grid
+//
+// $size - Name of class to use, i.e. "large" will generate %large-1, %large-2, etc.
+@mixin grid-sass-placeholders($size) {
+  @for $i from 1 through $total-columns - 1 {
+    %#{$size}-push#{-$i} {
+      @include grid-column($push:$i, $collapse:null, $float:false);
+    }
+    %#{$size}-pull#{-$i} {
+      @include grid-column($pull:$i, $collapse:null, $float:false);
+    }
+  }
+
+  %columns { @include grid-column($columns:false); }
+
+  @for $i from 1 through $total-columns {
+    %#{$size}#{-$i} { @include grid-column($columns:$i,$collapse:null,$float:false); }
+  }
+
+  @for $i from 0 through $total-columns - 2 {
+    %#{$size}-offset-#{$i} { @include grid-column($offset:$i, $collapse:null,$float:false); }
+  }
+
+  %columns + %columns:last-child { float: $opposite-direction; }
+  %columns + %columns%end { float: $default-float; }
+
+  %columns%#{$size}-centered { @include grid-column($center:true, $collapse:null, $float:false); }
+
+  %columns%#{$size}-uncentered {
+    margin-#{$default-float}: 0;
+    margin-#{$opposite-direction}: 0;
+    float: $default-float !important;
+  }
+
+  %columns%#{$size}-uncentered%opposite {
+    float: $opposite-direction !important;
+  }
+}
+
 // Create presentational classes for grid
 //
 // $size - Name of class to use, i.e. "large" will generate .large-1, .large-2, etc.
@@ -146,89 +186,101 @@ $total-columns: 12 !default;
 
   @for $i from 1 through $total-columns - 1 {
     .#{$size}-push#{-$i} {
-      @include grid-column($push:$i, $collapse:null, $float:false);
+      @extend %#{$size}-push#{-$i};
     }
     .#{$size}-pull#{-$i} {
-      @include grid-column($pull:$i, $collapse:null, $float:false);
+      @extend %#{$size}-pull#{-$i};
     }
   }
 
-  .column,
-  .columns { @include grid-column($columns:false); }
-
-
   @for $i from 1 through $total-columns {
-    .#{$size}#{-$i} { @include grid-column($columns:$i,$collapse:null,$float:false); }
+    .#{$size}#{-$i} { @extend %#{$size}#{-$i}; }
   }
 
   @for $i from 0 through $total-columns - 2 {
-    .#{$size}-offset-#{$i} { @include grid-column($offset:$i, $collapse:null,$float:false); }
+    .#{$size}-offset-#{$i} { @extend %#{$size}-offset-#{$i}; }
   }
-
-  [class*="column"] + [class*="column"]:last-child { float: $opposite-direction; }
-  [class*="column"] + [class*="column"].end { float: $default-float; }
-
-  .column.#{$size}-centered,
-  .columns.#{$size}-centered { @include grid-column($center:true, $collapse:null, $float:false); }
-
-  .column.#{$size}-uncentered,
-  .columns.#{$size}-uncentered {
-    margin-#{$default-float}: 0;
-    margin-#{$opposite-direction}: 0;
-    float: $default-float !important;
-  }
-
-  .column.#{$size}-uncentered.opposite,
-  .columns.#{$size}-uncentered.opposite {
-    float: $opposite-direction !important;
-
-  }
+  
+  .column,
+  .columns { @extend %columns; }
+  
+  .end { @extend %end; }
+  
+  .#{$size}-centered { @extend %#{$size}-centered }
+  .#{$size}-uncentered { @extend %#{$size}-uncentered }
+  
+  .opposite { @extend %opposite; }
+  
 }
 
 @include exports("grid") {
+  %row {
+    @include grid-row;
+
+    &%collapse {
+       > %column,
+       > %columns { @include grid-column($collapse:true); }
+
+      %row {margin-left:0; margin-right:0;}
+    }
+
+    %row { @include grid-row($behavior:nest);
+      &%collapse { @include grid-row($behavior:nest-collapse); }
+    }
+  }
+  
+  %columns { @include grid-column($columns:$total-columns); }
+  
+  @media #{$small-up} {
+    @include grid-sass-placeholders($size:small);
+  }
+
+  @media #{$medium-up} {
+    @include grid-sass-placeholders($size:medium);
+    
+    // Old push and pull classes
+    @for $i from 1 through $total-columns - 1 {
+      %push#{-$i} {
+        @include grid-column($push:$i, $collapse:null, $float:false);
+      }
+      %pull#{-$i} {
+        @include grid-column($pull:$i, $collapse:null, $float:false);
+      }
+    }
+  }
+  @media #{$large-up} {
+    @include grid-sass-placeholders($size:large);
+  }
+  @media #{$xlarge-up} {
+    @include grid-sass-placeholders($size:xlarge);
+  }
+  @media #{$xxlarge-up} {
+    @include grid-sass-placeholders($size:xxlarge);
+  }
+  
+  %column { @extend %columns; }
+  
   @if $include-html-grid-classes {
     .row {
-      @include grid-row;
-
-      &.collapse {
-         > .column,
-         > .columns { @include grid-column($collapse:true); }
-
-        .row {margin-left:0; margin-right:0;}
-      }
-
-      .row { @include grid-row($behavior:nest);
-        &.collapse { @include grid-row($behavior:nest-collapse); }
-      }
+      @extend %row;
     }
 
     .column,
-    .columns { @include grid-column($columns:$total-columns); }
-
-    @media #{$small-up} {
-      @include grid-html-classes($size:small);
+    .columns { @extend %columns; }
+    
+    .collapse { @extend %collapse; }
+    
+    @each $size in small, medium, large, xlarge, xxlarge {
+      @include grid-html-classes($size:$size);
     }
-
-    @media #{$medium-up} {
-      @include grid-html-classes($size:medium);
-      // Old push and pull classes
-      @for $i from 1 through $total-columns - 1 {
-        .push#{-$i} {
-          @include grid-column($push:$i, $collapse:null, $float:false);
-        }
-        .pull#{-$i} {
-          @include grid-column($pull:$i, $collapse:null, $float:false);
-        }
+    
+    @for $i from 1 through $total-columns - 1 {
+      .push#{-$i} {
+        @extend %push#{-$i};
       }
-    }
-    @media #{$large-up} {
-      @include grid-html-classes($size:large);
-    }
-    @media #{$xlarge-up} {
-      @include grid-html-classes($size:xlarge);
-    }
-    @media #{$xxlarge-up} {
-      @include grid-html-classes($size:xxlarge);
+      .pull#{-$i} {
+        @extend %pull#{-$i};
+      }
     }
   }
 }
