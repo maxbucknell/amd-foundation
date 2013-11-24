@@ -6,7 +6,7 @@
  * http://www.opensource.org/licenses/mit-license.php
 */
 
-(function ($, window, document, undefined) {
+define(['jquery'], function ($, undefined) {
   'use strict';
 
   // Used to retrieve Foundation media queries from CSS.
@@ -173,7 +173,7 @@
     return string;
   }
 
-  window.Foundation = {
+  var Foundation = {
     name : 'Foundation',
 
     version : '5.0.3',
@@ -414,5 +414,7 @@
       return this;
     });
   };
+  
+  return Foundation;
 
-}(jQuery, this, this.document));
+});

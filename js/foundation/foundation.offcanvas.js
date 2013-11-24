@@ -1,4 +1,4 @@
-;(function ($, window, document, undefined) {
+define(['jquery', 'foundation'], function ($, Foundation, undefined) {
   'use strict';
 
   Foundation.libs.offcanvas = {
@@ -34,4 +34,4 @@
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+});

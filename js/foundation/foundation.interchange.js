@@ -1,4 +1,4 @@
-;(function ($, window, document, undefined) {
+define(['jquery', 'Foundation'], function ($, Foundation, undefined) {
   'use strict';
 
   Foundation.libs.interchange = {
@@ -301,4 +301,5 @@
 
   };
 
-}(jQuery, this, this.document));
+  return Foundation;
+});

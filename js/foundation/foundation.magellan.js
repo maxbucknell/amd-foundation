@@ -1,4 +1,4 @@
-;(function ($, window, document, undefined) {
+define(['jquery', 'foundation'], function ($, Foundation, undefined) {
   'use strict';
 
   Foundation.libs.magellan = {
@@ -115,4 +115,6 @@
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+
+  return Foundation;
+});

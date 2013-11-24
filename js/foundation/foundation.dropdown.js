@@ -1,4 +1,4 @@
-;(function ($, window, document, undefined) {
+define(['jquery', 'Foundation'], function ($, Foundation, undefined) {
   'use strict';
 
   Foundation.libs.dropdown = {
@@ -181,4 +181,4 @@
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+});

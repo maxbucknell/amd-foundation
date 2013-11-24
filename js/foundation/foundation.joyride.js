@@ -1,4 +1,4 @@
-;(function ($, window, document, undefined) {
+define(['jquery', 'foundation', 'modernizr'], function ($, Foundation, Modernizr, undefined) {
   'use strict';
 
   var Modernizr = Modernizr || false;
@@ -836,4 +836,6 @@
 
     reflow : function () {}
   };
+  
+  return Foundation;
 }(jQuery, this, this.document));

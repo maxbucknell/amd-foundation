@@ -1,4 +1,4 @@
-;(function ($, window, document, undefined) {
+define(['jquery', 'foundation'], function ($, Foundation, undefined) {
   'use strict';
 
   var noop = function() {};
@@ -430,5 +430,5 @@
     }
   };
 
-    
-}(jQuery, this, this.document));
+  return Foundation;
+});

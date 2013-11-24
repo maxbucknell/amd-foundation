@@ -1,5 +1,4 @@
-/*jslint unparam: true, browser: true, indent: 2 */
-;(function ($, window, document, undefined) {
+define(['jquery', 'foundation'], function ($, Foundation, undefined) {
   'use strict';
 
   Foundation.libs.tab = {
@@ -34,4 +33,6 @@
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+
+  return Foundation;
+});

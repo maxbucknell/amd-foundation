@@ -1,4 +1,4 @@
-;(function ($, window, document, undefined) {
+define(['jquery', 'Foundation'], function ($, Foundation, undefined) {
   'use strict';
 
   Foundation.libs.alert = {
@@ -31,4 +31,6 @@
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+
+  return Foundation;
+});
